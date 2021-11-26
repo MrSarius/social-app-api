@@ -35,29 +35,6 @@ export async function handleRequest(request) {
     }
 }
 
-
-//credits to exvuma -> https://github.com/ConzorKingKong/cors-preflight-template
-function handleOptions(request) {
-    if (
-        request.headers.get('Origin') !== null &&
-        request.headers.get('Access-Control-Request-Method') !== null &&
-        allowedMethods.includes(request.headers.get('Access-Control-Request-Method')) &&
-        request.headers.get('Access-Control-Request-Headers') !== null
-    ) {
-        // Handle CORS pre-flight request.
-        return new Response(null, {
-            headers: corsHeaders,
-        })
-    } else {
-        // Handle standard OPTIONS request.
-        return new Response(null, {
-            headers: {
-                Allow: allowedMethods,
-            },
-        })
-    }
-}
-
 async function handleGetPosts(request) {
     var allKeys = []
 
@@ -123,4 +100,26 @@ async function validatePostInpud(request) {
         throw new BadRequestError("Post was malformed");
     }
     return post;
+}
+
+//credits to exvuma -> https://github.com/ConzorKingKong/cors-preflight-template
+function handleOptions(request) {
+    if (
+        request.headers.get('Origin') !== null &&
+        request.headers.get('Access-Control-Request-Method') !== null &&
+        allowedMethods.includes(request.headers.get('Access-Control-Request-Method')) &&
+        request.headers.get('Access-Control-Request-Headers') !== null
+    ) {
+        // Handle CORS pre-flight request.
+        return new Response(null, {
+            headers: corsHeaders,
+        })
+    } else {
+        // Handle standard OPTIONS request.
+        return new Response(null, {
+            headers: {
+                Allow: allowedMethods,
+            },
+        })
+    }
 }
