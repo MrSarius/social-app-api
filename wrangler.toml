@@ -1,0 +1,14 @@
+name = "social-app-api"
+type = "webpack"
+
+account_id = "d048056b58b37000cb8a1032d7cdc410"
+workers_dev = true
+route = ""
+zone_id = ""
+compatibility_date = "2021-11-25"
+
+webpack_config = "webpack.config.js"
+
+kv_namespaces = [ 
+         { binding = "POSTS", preview_id = "88e67a399e5240958697fb2907ebdb2c", id = "0362c3b5d48d4fe2b6096973ba290768"}
+]
