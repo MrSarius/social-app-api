@@ -1,15 +1,5 @@
-# 👷 `worker-template` Hello World
+# Scoial App REST API
 
-A template for kick starting a Cloudflare worker project.
-
-[`index.js`](https://github.com/cloudflare/worker-template/blob/master/index.js) is the content of the Workers script.
-
-#### Wrangler
-
-To generate using [wrangler](https://github.com/cloudflare/wrangler)
-
-```
-wrangler generate projectname https://github.com/cloudflare/worker-template
-```
-
-Further documentation for Wrangler can be found [here](https://developers.cloudflare.com/workers/tooling/wrangler).
+Trying out Cloudflare's serverless workers and pages.
+[Here](https://social-api.riegel.workers.dev/) you can find the REST API.
+[Here](https://social-app-front.pages.dev/) you can find the frontend react app.
