@@ -63,7 +63,7 @@ async function handleGetPosts(request) {
 }
 
 async function handlePostPost(request) {
-    const post = await validatePostInpud(request);
+    let post = await validatePostInpud(request);
 
     let uuid = uuidv4();
 
