@@ -30,7 +30,7 @@ export async function handleRequest(request) {
         } else if (e instanceof MethodNotAllowedError) {
             return new Response(e.message, { headers: { 'Content-type': 'text/plain' }, status: 405 });
         } else {
-            return new Response("Internal Server Error", { headers: { 'Content-type': 'text/plain' }, status: 500 });
+            return new Response(e.message, { headers: { 'Content-type': 'text/plain' }, status: 500 });
         }
     }
 }
@@ -117,9 +117,9 @@ async function validatePostInpud(request) {
     if (!post.username ||
         !post.content ||
         !post.title ||
-        !(post.username instanceof string) ||
-        !(post.content instanceof string) ||
-        !(post.title instanceof string)) {
+        typeof post.username !== "string" ||
+        typeof post.content !== "string" ||
+        typeof post.title !== "string") {
         throw new BadRequestError("Post was malformed");
     }
     return post;
