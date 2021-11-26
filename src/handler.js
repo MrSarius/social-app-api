@@ -87,7 +87,7 @@ async function handlePostPost(request) {
     let uuid = uuidv4();
 
     if (post.uuid) {
-        //if post already contains uuid, is is an already existing one that has been edited
+        //if post already contains uuid, is is an already existing one that has been edited. TODO: validate UUID format
         uuid = post.uuid;
     } else {
         //initialize post meta data
@@ -117,9 +117,9 @@ async function validatePostInpud(request) {
     if (!post.username ||
         !post.content ||
         !post.title ||
-        !(post.username instanceof String) ||
-        !(post.content instanceof String) ||
-        !(post.title instanceof String)) {
+        !(post.username instanceof string) ||
+        !(post.content instanceof string) ||
+        !(post.title instanceof string)) {
         throw new BadRequestError("Post was malformed");
     }
     return post;
