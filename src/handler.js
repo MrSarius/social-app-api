@@ -14,13 +14,17 @@ const router = Router();
 router
     .get('/posts', handleGetPosts)
     .post('/posts', handlePostPost)
-    .options('/', handleOptions)
     .get('*', () => { throw new NotFoundError('Not Found') })
     .post('*', () => { throw new NotFoundError('Not Found') })
     .all('*', () => { throw new MethodNotAllowedError('Method not allowed') });
 
 export async function handleRequest(request) {
     try {
+        //quick and dirty fix for preflight OPTIONS requests
+        if (request.method === "OPTIONS"){
+            return handleOptions(request);
+        }
+        
         return await router.handle(request);
     } catch (e) {
         if (e instanceof BadRequestError) {
