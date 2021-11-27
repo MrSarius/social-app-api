@@ -1,12 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Router } from 'itty-router'
+import { Router } from 'itty-router';
+import { parse } from "cookie";
 import { BadRequestError, MethodNotAllowedError, NotFoundError, UnauthorizedError } from './errors';
 
 const allowedMethods = 'GET, POST, OPTIONS'
 const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': FRONT_END,
     'Access-Control-Allow-Methods': allowedMethods,
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Credentials': true
 }
 
 const router = Router();
@@ -24,7 +26,6 @@ export async function handleRequest(request) {
         if (request.method === "OPTIONS") {
             return handleOptions(request);
         }
-
         return await router.handle(request);
     } catch (e) {
         if (e instanceof BadRequestError) {
@@ -60,12 +61,43 @@ async function handleGetPosts(request) {
         .sort((post1, post2) => post2.date - post1.date) //very unefficient to sort all posts in memory, but no alternative because of KV stores
 
     const body = JSON.stringify(posts)
-    const headers = { ...corsHeaders, 'Content-type': 'application/json' }
+    const headers = { ...corsHeaders }
     return new Response(body, { headers })
 }
 
 async function handlePostPost(request) {
     let post = await validatePostInpud(request);
+    let headers = { ...corsHeaders }
+
+    let username = await USERS.get(post.username);
+
+    if (username) {
+        const cookies = parse(request.headers.get("Cookie") || "");
+        const cookieName = "token";
+        if (cookies && cookies[cookieName]) {
+            let tokenOfUser = cookies[cookieName];
+            let res = await fetch(`${JWT_TUNNEL}/verify`, {
+                method: "GET",
+                headers: {
+                    "Cookie": `token=${tokenOfUser}`
+                }});
+
+            res = await res.text();
+
+            if (res == post.username) {
+                username = post.username;
+            } else {
+                throw new UnauthorizedError("Unauthorized");
+            }
+        } else {
+            throw new UnauthorizedError("Unauthorized");
+        }
+    } else {
+        let res = await fetch(`${JWT_TUNNEL}/auth/${post.username}`);
+        headers = { ...headers, 'Set-Cookie': `${res.headers.get("Set-Cookie")}` }
+        await USERS.put(post.username, post.username);
+        username = post.username
+    }
 
     let uuid = uuidv4();
 
@@ -83,7 +115,7 @@ async function handlePostPost(request) {
 
     await POSTS.put(key, JSON.stringify(post));
 
-    const headers = { ...corsHeaders, 'Content-type': 'text/plain' };
+    headers = { ...headers, 'Content-type': 'text/plain' };
     const body = "success";
 
     return new Response(body, { headers });
