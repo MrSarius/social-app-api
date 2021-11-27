@@ -16,8 +16,15 @@ class NotFoundError extends Error{
     }
 }
 
+class UnauthorizedError extends Error{
+    constructor(message){
+        super(message);
+    }
+}
+
 export {
     BadRequestError,
     MethodNotAllowedError,
-    NotFoundError
+    NotFoundError,
+    UnauthorizedError
 }

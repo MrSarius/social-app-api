@@ -9,6 +9,10 @@ compatibility_date = "2021-11-25"
 
 webpack_config = "webpack.config.js"
 
+[vars]
+JWT_TUNNEL = "https://grateful-timber-reviewer-checks.trycloudflare.com"
+
 kv_namespaces = [ 
-         { binding = "POSTS", preview_id = "88e67a399e5240958697fb2907ebdb2c", id = "0362c3b5d48d4fe2b6096973ba290768"}
+         { binding = "POSTS", preview_id = "88e67a399e5240958697fb2907ebdb2c", id = "0362c3b5d48d4fe2b6096973ba290768"},
+         { binding = "USERS", preview_id = "cc0292336f134a77bb19b820640321a0", id = "f66b5695e3404cf58a74f79e2a1e1fde"}
 ]

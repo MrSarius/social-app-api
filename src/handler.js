@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'itty-router'
-import { BadRequestError, MethodNotAllowedError, NotFoundError } from './errors';
+import { BadRequestError, MethodNotAllowedError, NotFoundError, UnauthorizedError } from './errors';
 
 const allowedMethods = 'GET, POST, OPTIONS'
 const corsHeaders = {
@@ -21,14 +21,16 @@ router
 export async function handleRequest(request) {
     try {
         //quick and dirty fix for preflight OPTIONS requests
-        if (request.method === "OPTIONS"){
+        if (request.method === "OPTIONS") {
             return handleOptions(request);
         }
-        
+
         return await router.handle(request);
     } catch (e) {
         if (e instanceof BadRequestError) {
             return new Response(e.message, { headers: { 'Content-type': 'text/plain' }, status: 400 });
+        } else if (e instanceof UnauthorizedError) {
+            return new Response(e.message, { headers: { 'Content-type': 'text/plain' }, status: 401 });
         } else if (e instanceof NotFoundError) {
             return new Response(e.message, { headers: { 'Content-type': 'text/plain' }, status: 404 });
         } else if (e instanceof MethodNotAllowedError) {
