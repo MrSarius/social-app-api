@@ -1,4 +1,4 @@
-# Scoial App REST API
+# Social App REST API
 
 Trying out Cloudflare's serverless Workers, Pages and KV stores.
 
